@@ -78,7 +78,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.3.10.Final</version> <!-- Helidon 1系に適したバージョン -->
+            <version>5.3.20.Final</version> <!-- Helidon 1系に適したバージョン -->
         </dependency>
 
         <!-- JTAのAPI -->
