@@ -6,14 +6,13 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 import java.util.Random;
 
 @Path("/payment")
 @RequestScoped
 public class PaymentService {
 
-    @PersistenceContext(unitName = "paymentPU")
+    @PersistenceContext
     private EntityManager em;
 
     @POST
@@ -26,6 +25,7 @@ public class PaymentService {
             if (em == null) {
                 throw new IllegalStateException("EntityManager is not initialized");
             }
+            System.out.println(user);
             em.persist(user);
 
             Card card = new Card();

@@ -1,5 +1,6 @@
 package io.helidon.examples.quickstart.mp;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 
 @Entity
@@ -10,7 +11,8 @@ public class Card {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonbTransient
     private User user;
 
     @Column(unique = true, nullable = false)
