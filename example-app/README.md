@@ -14,6 +14,13 @@ java -jar target/helidon-quickstart-mp.jar
 ## Exercise the application
 
 ```
+curl -i -X POST http://localhost:8080/payment/register_user \
+     -H "Content-Type: application/json" \
+     -d '{
+           "userName": "John Doe"
+         }'
+
+         
 curl -X GET http://localhost:8080/greet
 {"message":"Hello World!"}
 
