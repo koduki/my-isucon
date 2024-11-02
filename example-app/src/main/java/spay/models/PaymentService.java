@@ -4,10 +4,10 @@
  */
 package spay.models;
 
-import java.util.Random;
 import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  *
@@ -24,58 +24,29 @@ public class PaymentService {
                 .setParameter("cardNumber", request.getCard().getCardNumber())
                 .getSingleResult();
         verifyLimit(request.getAmount(), card);
+
         card.setUsedAmount(card.getUsedAmount() + request.getAmount());
         PaymentTransaction transaction = new PaymentTransaction();
         transaction.setCard(card);
         transaction.setItemName(request.getItemName());
         transaction.setAmount(request.getAmount());
         em.persist(transaction);
+
         return transaction;
     }
 
-    public Card addCard(long userId) {
-        User user = em.find(User.class, userId);
-
-        Card card = new Card();
-        card.setCardNumber(generateCardNumber());
-        card.setLimitAmount(generateLimitAmount());
-        card.setUsedAmount(0);
-        em.persist(card);
-
-        user.getCards().add(card);
-
-        return card;
-    }
-
-    public void registUser(User user) {
-        em.persist(user);
-
-        Card card = new Card();
-        card.setCardNumber(generateCardNumber());
-        card.setLimitAmount(generateLimitAmount());
-        card.setUsedAmount(0);
-        em.persist(card);
-
-        user.getCards().add(card);
+    public List<PaymentTransaction> history(String cardNumber) {
+        return em
+                .createQuery("SELECT pt FROM PaymentTransaction pt WHERE pt.card.cardNumber = :cardNumber",
+                        PaymentTransaction.class)
+                .setParameter("cardNumber", cardNumber)
+                .getResultList();
     }
 
     private void verifyLimit(int requestAmount, Card card) throws LimitExceededException {
         if (requestAmount > card.getLimitAmount() - card.getUsedAmount()) {
             throw new LimitExceededException();
         }
-    }
-
-    private String generateCardNumber() {
-        Random random = new Random();
-        StringBuilder cardNumber = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
-            cardNumber.append(random.nextInt(10));
-        }
-        return cardNumber.toString();
-    }
-
-    private int generateLimitAmount() {
-        return 1000000 + new Random().nextInt(9000000);
     }
 
 }

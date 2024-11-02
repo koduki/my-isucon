@@ -14,42 +14,39 @@ java -jar target/spay-app.jar
 ## Exercise the application
 
 ```
-curl -i -X POST http://localhost:8080/payment/register_user \
+curl -i -X POST http://localhost:8080/account/ \
      -H "Content-Type: application/json" \
      -d '{
            "userName": "John Doe"
          }'
 
-         
-curl -X GET http://localhost:8080/greet
-{"message":"Hello World!"}
+curl -i -X POST http://localhost:8080/account/1/card \
+     -H "Content-Type: application/json"
 
-curl -X GET http://localhost:8080/greet/Joe
-{"message":"Hello Joe!"}
+curl -i -X GET http://localhost:8080/account/1\
+     -H "Content-Type: application/json"
 
-curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola"}' http://localhost:8080/greet/greeting
+curl -i -X POST http://localhost:8080/payment/purchase \
+     -H "Content-Type: application/json" \
+     -d '{
+           "card": {
+             "cardNumber": "8116319185577572"
+           },
+           "itemName": "Sample Item",
+           "amount": 100
+         }'
 
-curl -X GET http://localhost:8080/greet/Jose
-{"message":"Hola Jose!"}
+curl -i -X GET http://localhost:8080/payment/history/8116319185577572\
+     -H "Content-Type: application/json"
 ```
 
 ## Try health and metrics
 
 ```
 curl -s -X GET http://localhost:8080/health
-{"outcome":"UP",...
-. . .
 
 # Prometheus Format
 curl -s -X GET http://localhost:8080/metrics
-# TYPE base:gc_g1_young_generation_count gauge
-. . .
-
-# JSON Format
-curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
-{"base":...
-. . .
-
 ```
 
 ## Build the Docker Image

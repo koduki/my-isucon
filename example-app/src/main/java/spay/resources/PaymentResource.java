@@ -1,14 +1,12 @@
 package spay.resources;
 
-import spay.models.PaymentTransaction;
-import spay.models.Card;
-import spay.models.User;
 import javax.enterprise.context.RequestScoped;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.inject.Inject;
+import java.util.List;
 import spay.models.*;
 
 @Path("/payment")
@@ -17,27 +15,6 @@ public class PaymentResource {
 
     @Inject
     PaymentService service;
-
-    @POST
-    @Path("/register_user")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response registerUser(User user) {
-        service.registUser(user);
-        return Response.ok(user).build();
-    }
-
-    @POST
-    @Path("/add_card")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response addCard(@QueryParam("user_id") Long userId) {
-        Card result = service.addCard(userId);
-        return Response.ok(result).build();
-
-    }
 
     @POST
     @Path("/purchase")
@@ -53,6 +30,16 @@ public class PaymentResource {
                     .entity("Limit exceeded")
                     .build();
         }
+    }
+
+    @GET
+    @Path("/history/{card_number}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response history(@PathParam("card_number") String cardNumber) {
+        List<PaymentTransaction> transactions = service.history(cardNumber);
+        return Response.ok(transactions).build();
     }
 
 }

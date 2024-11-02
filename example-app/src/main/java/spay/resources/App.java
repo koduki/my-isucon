@@ -35,8 +35,8 @@ public class App extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         return CollectionsHelper.setOf(
-                // GreetResource.class,
-                PaymentResource.class // ここにPaymentServiceを追加
+                AccountResource.class,
+                PaymentResource.class
         );
     }
 }
