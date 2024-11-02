@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.helidon.examples.quickstart.mp;
+package spay;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +34,7 @@ public final class Main {
 
     /**
      * Application main entry point.
+     *
      * @param args command line arguments
      * @throws IOException if there are problems reading logging properties
      */
@@ -45,17 +45,15 @@ public final class Main {
         // start the server
         Server server = startServer();
 
-        System.out.println("http://localhost:" + server.port() + "/greet");
+        System.out.println("http://localhost:" + server.port() + "/payment");
     }
 
     /**
      * Start the server.
+     *
      * @return the created {@link Server} instance
      */
     static Server startServer() {
-        // Server will automatically pick up configuration from
-        // microprofile-config.properties
-        // and Application classes annotated as @ApplicationScoped
         return Server.create().start();
     }
 

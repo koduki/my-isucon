@@ -1,19 +1,15 @@
-package io.helidon.examples.quickstart.mp;
+package spay.models;
 
-import javax.json.bind.annotation.JsonbTransient;
+import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-public class Card {
+public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_seq")
     @SequenceGenerator(name = "card_seq", sequenceName = "card_sequence", allocationSize = 1)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonbTransient
-    private User user;
 
     @Column(unique = true, nullable = false)
     private String cardNumber;
@@ -52,14 +48,6 @@ public class Card {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getCardNumber() {

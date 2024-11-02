@@ -11,7 +11,9 @@
 		"vscode": {
 			"extensions": [
 				"redhat.java",
-				"redhat.fabric8-analytics"
+				"redhat.fabric8-analytics",
+				"redhat.vscode-xml",
+				"ms-azuretools.vscode-docker"
 			]
 		}
 	},

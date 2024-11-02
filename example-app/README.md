@@ -8,7 +8,7 @@ This example implements a simple Hello World REST service using MicroProfile.
 With JDK8+
 ```bash
 mvn package
-java -jar target/helidon-quickstart-mp.jar
+java -jar target/spay-app.jar
 ```
 
 ## Exercise the application

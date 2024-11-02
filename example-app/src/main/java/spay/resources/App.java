@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.helidon.examples.quickstart.mp;
+package spay.resources;
 
 import java.util.Set;
 
@@ -24,18 +24,19 @@ import javax.ws.rs.core.Application;
 
 import io.helidon.common.CollectionsHelper;
 
+
 /**
  * Simple Application that produces a greeting message.
  */
 @ApplicationScoped
 @ApplicationPath("/")
-public class GreetApplication extends Application {
+public class App extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
         return CollectionsHelper.setOf(
-                GreetResource.class,
-                PaymentService.class // ここにPaymentServiceを追加
+                // GreetResource.class,
+                PaymentResource.class // ここにPaymentServiceを追加
         );
     }
 }

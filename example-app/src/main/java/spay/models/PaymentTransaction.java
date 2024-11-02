@@ -1,9 +1,10 @@
-package io.helidon.examples.quickstart.mp;
+package spay.models;
 
+import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-public class Transaction {
+public class PaymentTransaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_seq")
     @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_sequence", allocationSize = 1)
@@ -22,7 +23,7 @@ public class Transaction {
     @Column(nullable = false)
     private java.sql.Timestamp transactionDate;
 
-    public Transaction() {
+    public PaymentTransaction() {
     }
 
     @PrePersist

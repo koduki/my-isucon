@@ -1,11 +1,12 @@
-package io.helidon.examples.quickstart.mp;
+package spay.models;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
@@ -20,7 +21,8 @@ public class User {
     @Column(nullable = false)
     private java.sql.Timestamp updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id") // 外部キーを指定
     private List<Card> cards;
 
     // デフォルトコンストラクタ
