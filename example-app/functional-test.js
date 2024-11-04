@@ -7,7 +7,7 @@ export const options = {
 };
 
 export default function () {
-  group('Main scenario', () => {
+  group('Regular scenario', () => {
     const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
     const BASE_URL = 'http://localhost:8080'
 
@@ -56,6 +56,49 @@ export default function () {
     // Step 5: Get payment history
     response = http.get(`${BASE_URL}/payment/history/${cardNumber}`, JSON_HEADER);
     check(response, { 'get payment history status is 200': (r) => r.status === 200 });
+
+    sleep(1); // 各ステップの間に1秒の待機
+  });
+
+  group('Limit Over scenario', () => {
+    const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
+    const BASE_URL = 'http://localhost:8080'
+
+    // Step 1: Create account for limit check.
+    const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;
+    let response = http.post(`${BASE_URL}/account/`, JSON.stringify({ userName: randomUserName }), JSON_HEADER);
+    let account = JSON.parse(response.body);
+    const limitAmount = account.cards[0].limitAmount; 
+
+    // 限度額未満の購入
+    let amount = limitAmount - 1;
+    response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
+      card: { cardNumber: account.cards[0].cardNumber },
+      itemName: 'Sample Item',
+      amount: amount,
+    }), JSON_HEADER);
+    check(response, { 'purchase status is 200 if under limit': (r) => r.status === 200 });
+
+    // 限度額と同値の購入
+    amount = 1;
+    response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
+      card: { cardNumber: account.cards[0].cardNumber },
+      itemName: 'Sample Item',
+      amount: amount,
+    }), JSON_HEADER);
+    check(response, { 'purchase status is 200 if equal to limit': (r) => r.status === 200 });
+
+    // 限度額を超えた購入
+    amount = 1;
+    response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
+      card: { cardNumber: account.cards[0].cardNumber },
+      itemName: 'Sample Item',
+      amount: amount,
+    }), JSON_HEADER);
+    check(response, {
+      'purchase status is 422 if over limit': (r) => r.status === 422,
+      'purchase body is Limit exceeded': (r) => r.body === 'Limit exceeded'
+    });
 
     sleep(1); // 各ステップの間に1秒の待機
   });

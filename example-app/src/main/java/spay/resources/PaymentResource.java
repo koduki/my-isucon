@@ -26,7 +26,7 @@ public class PaymentResource {
             PaymentTransaction transaction = service.purchase(request);
             return Response.ok(transaction).build();
         } catch (LimitExceededException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
+            return Response.status(422) // UNPROCESSABLE_ENTITY
                     .entity("Limit exceeded")
                     .build();
         }

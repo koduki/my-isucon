@@ -44,7 +44,7 @@ public class PaymentService {
     }
 
     private void verifyLimit(int requestAmount, Card card) throws LimitExceededException {
-        if (requestAmount > card.getLimitAmount() - card.getUsedAmount()) {
+        if (card.getLimitAmount() < requestAmount + card.getUsedAmount()) {
             throw new LimitExceededException();
         }
     }
