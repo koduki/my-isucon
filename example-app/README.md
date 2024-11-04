@@ -23,20 +23,20 @@ curl -i -X POST http://localhost:8080/account/ \
 curl -i -X POST http://localhost:8080/account/1/card \
      -H "Content-Type: application/json"
 
-curl -i -X GET http://localhost:8080/account/1\
+curl -i -X GET http://localhost:8080/account/1033\
      -H "Content-Type: application/json"
 
 curl -i -X POST http://localhost:8080/payment/purchase \
      -H "Content-Type: application/json" \
      -d '{
            "card": {
-             "cardNumber": "8116319185577572"
+             "cardNumber": "9533636653254488"
            },
            "itemName": "Sample Item",
            "amount": 100
          }'
 
-curl -i -X GET http://localhost:8080/payment/history/8116319185577572\
+curl -i -X GET http://localhost:8080/payment/history/9533636653254488\
      -H "Content-Type: application/json"
 ```
 
@@ -49,7 +49,9 @@ sudo apt-get update
 sudo apt-get install k6
 
 k6 version
-k6 run test.js
+k6 run --vus 1 --iterations 1 
+k6 run functional-test.js
+
 ```
 
 ## Try health and metrics

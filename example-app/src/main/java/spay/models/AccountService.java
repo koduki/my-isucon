@@ -42,6 +42,7 @@ public class AccountService {
 
         user.getCards().add(card);
         em.persist(user);
+        em.flush(); // ここでデータベースに即座に反映
 
         return card;
     }
