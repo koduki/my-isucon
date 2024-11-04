@@ -61,8 +61,13 @@ export default function () {
     sleep(1); // 各ステップの間に1秒の待機
   });
 
-  group('Limit Over scenario', () => {
+  group('Massive Purchase scenario', (amount) => {
     const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
+    const purchase = (amount) => http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
+      cardNumber: account.cards[0].cardNumber,
+      itemName: 'Sample Item',
+      amount: amount,
+    }), JSON_HEADER);
 
     // Step 1: Create account for limit check.
     const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;
@@ -71,34 +76,56 @@ export default function () {
     const limitAmount = account.cards[0].limitAmount;
 
     // 限度額未満の購入
-    let amount = limitAmount - 1;
-    response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
-      cardNumber: account.cards[0].cardNumber,
-      itemName: 'Sample Item',
-      amount: amount,
-    }), JSON_HEADER);
-    check(response, { 'purchase status is 200 if under limit': (r) => r.status === 200 });
+    // 限度額未満の購入をランダムに繰り返す
+    let totalAmount = 0;
+    let purchaseCount = 0;
+    const maxPurchases = Math.floor(Math.random() * (10000 - 100 + 1)) + 100; // 100回から10,000回のランダムな購入回数
+    console.log(maxPurchases)
+    for (let i = 0; i < maxPurchases; i++) {
+      let purchaseAmount = Math.floor(Math.random() * (1000 - 100 + 1)) + 100; // 100円から1000円のランダムな金額
+      if (totalAmount + purchaseAmount >= limitAmount) {
+        purchaseAmount = limitAmount - totalAmount - 1; // 限度額を超えないように調整
+      }
 
-    // 限度額と同値の購入
-    amount = 1;
-    response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
-      cardNumber: account.cards[0].cardNumber,
-      itemName: 'Sample Item',
-      amount: amount,
-    }), JSON_HEADER);
-    check(response, { 'purchase status is 200 if equal to limit': (r) => r.status === 200 });
+      response = purchase(purchaseAmount);
+      check(response, { 'purchase status is 200 if under limit': (r) => r.status === 200 });
+
+      totalAmount += purchaseAmount;
+      purchaseCount = i;
+      if (totalAmount >= limitAmount - 1) {
+        console.log(purchaseCount)
+        break; // 限度額に近づいたら終了
+      }
+    }
+
+    // 最後に限度額に達する購入
+    let finalAmount = limitAmount - totalAmount;
+    response = purchase(finalAmount);
+    check(response, { 'final purchase status is 200 if reaching limit': (r) => r.status === 200 });
 
     // 限度額を超えた購入
-    amount = 1;
-    response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
-      cardNumber: account.cards[0].cardNumber,
-      itemName: 'Sample Item',
-      amount: amount,
-    }), JSON_HEADER);
+    response = purchase(1);
     check(response, {
       'purchase status is 422 if over limit': (r) => r.status === 422,
       'purchase body is Limit exceeded': (r) => r.body === 'Limit exceeded'
     });
+
+    response = http.get(`${BASE_URL}/account/${account.id}`, JSON_HEADER);
+    let replyAccount = JSON.parse(response.body);
+    check(response, {
+      'get account status is 200': (r) => r.status === 200,
+      'limitAmount and usedAmount are same': (r) => replyAccount.cards[0].limitAmount === replyAccount.cards[0].usedAmount,
+    });
+
+    // Step 5: Get payment history
+    response = http.get(`${BASE_URL}/payment/history/${replyAccount.cards[0].cardNumber}`, JSON_HEADER);
+    let history = JSON.parse(response.body);
+    purchaseCount += 2
+    console.log(history.length)
+    console.log(purchaseCount)
+    check(response, { 'get payment history status is 200': (r) => r.status === 200 });
+    check(response, { 'history record counts is same with request counts': (r) => purchaseCount　=== JSON.parse(r.body).length });
+
 
     sleep(1); // 各ステップの間に1秒の待機
   });

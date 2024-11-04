@@ -29,9 +29,7 @@ curl -i -X GET http://localhost:8080/account/1033\
 curl -i -X POST http://localhost:8080/payment/purchase \
      -H "Content-Type: application/json" \
      -d '{
-           "card": {
-             "cardNumber": "9533636653254488"
-           },
+          "cardNumber": "9533636653254488"
            "itemName": "Sample Item",
            "amount": 100
          }'

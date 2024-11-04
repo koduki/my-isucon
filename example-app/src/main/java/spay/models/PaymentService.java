@@ -21,13 +21,13 @@ public class PaymentService {
 
     public PaymentTransaction purchase(PaymentTransaction request) throws LimitExceededException {
         Card card = em.createQuery("SELECT c FROM Card c WHERE c.cardNumber = :cardNumber", Card.class)
-                .setParameter("cardNumber", request.getCard().getCardNumber())
+                .setParameter("cardNumber", request.getCardNumber())
                 .getSingleResult();
         verifyLimit(request.getAmount(), card);
 
         card.setUsedAmount(card.getUsedAmount() + request.getAmount());
         PaymentTransaction transaction = new PaymentTransaction();
-        transaction.setCard(card);
+        transaction.setCardNumber(card.getCardNumber());
         transaction.setItemName(request.getItemName());
         transaction.setAmount(request.getAmount());
         em.persist(transaction);
@@ -37,7 +37,7 @@ public class PaymentService {
 
     public List<PaymentTransaction> history(String cardNumber) {
         return em
-                .createQuery("SELECT pt FROM PaymentTransaction pt WHERE pt.card.cardNumber = :cardNumber",
+                .createQuery("SELECT pt FROM PaymentTransaction pt WHERE pt.cardNumber = :cardNumber",
                         PaymentTransaction.class)
                 .setParameter("cardNumber", cardNumber)
                 .getResultList();

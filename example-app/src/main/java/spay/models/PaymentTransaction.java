@@ -10,9 +10,8 @@ public class PaymentTransaction implements Serializable {
     @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_sequence", allocationSize = 1)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Card card;
+    @Column(nullable = false)
+    private String cardNumber; 
 
     @Column(nullable = false)
     private String itemName;
@@ -40,12 +39,12 @@ public class PaymentTransaction implements Serializable {
         this.id = id;
     }
 
-    public Card getCard() {
-        return card;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setCard(Card card) {
-        this.card = card;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     public String getItemName() {
