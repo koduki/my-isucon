@@ -6,10 +6,11 @@ export const options = {
   duration: '30s', // テスト実行時間
 };
 
+const BASE_URL = 'http://app:8080'
+
 export default function () {
   group('Regular scenario', () => {
     const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
-    const BASE_URL = 'http://localhost:8080'
 
     // Step 1: Create account
     const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;
@@ -62,7 +63,6 @@ export default function () {
 
   group('Limit Over scenario', () => {
     const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
-    const BASE_URL = 'http://localhost:8080'
 
     // Step 1: Create account for limit check.
     const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;

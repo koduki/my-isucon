@@ -1,15 +1,17 @@
-version: '3.8'
-
 services:
   app:
     user: root
     image: mcr.microsoft.com/devcontainers/java:1-8-bullseye
     volumes:
-      - ..:/workspace
+      - ./example-app:/workspace
+      - ./example-app/.devcontainer/m2_repo:/root/.m2
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./m2_repo:/root/.m2
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     environment:
       - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
     command: /bin/sh -c 'while sleep 1000; do :; done'
+  load-tester:
+    image: grafana/k6
+    volumes:
+      - ./load-tester:/workspace
