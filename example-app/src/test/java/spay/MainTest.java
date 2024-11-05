@@ -14,7 +14,7 @@
 //  * limitations under the License.
 //  */
 
-// package io.helidon.examples.quickstart.mp;
+// package spay;
 
 // import javax.enterprise.inject.se.SeContainer;
 // import javax.enterprise.inject.spi.CDI;

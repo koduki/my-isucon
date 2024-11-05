@@ -1,16 +1,30 @@
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
 
-export const options = {
-  vus: 10, // 仮想ユーザー数
-  duration: '30s', // テスト実行時間
+const generateStages = (start, end, step, duration) => {
+  const stages = [];
+  for (let target = start; target <= end; target += step) {
+    stages.push({ duration: duration, target: target });
+  }
+  return stages;
 };
 
-const BASE_URL = 'http://app:8080'
+export const options = {
+  stages: generateStages(0, 10000, 100, '5s'), // 0から10,000まで100刻みで増加、各ステージ5秒
+  thresholds: {
+    http_req_failed: [
+      { threshold: 'rate<0.05', abortOnFail: true, delayAbortEval: '10s' } // エラー率が5%未満でない場合、テストを終了
+    ],
+    http_req_duration: [
+      { threshold: 'p(95)<1000', abortOnFail: true, delayAbortEval: '10s' } // 95%のリクエストが1,000ms未満でない場合、テストを終了
+    ],
+  },
+};
+const BASE_URL = 'http://app:8080';
 
 export default function () {
   group('Regular scenario', () => {
-    const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
+    const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } };
 
     // Step 1: Create account
     const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;
@@ -61,8 +75,8 @@ export default function () {
     sleep(1); // 各ステップの間に1秒の待機
   });
 
-  group('Massive Purchase scenario', (amount) => {
-    const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
+  group('Massive Purchase scenario', () => {
+    const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } };
     const purchase = (amount) => http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
       cardNumber: account.cards[0].cardNumber,
       itemName: 'Sample Item',
@@ -76,15 +90,13 @@ export default function () {
     const limitAmount = account.cards[0].limitAmount;
 
     // 限度額未満の購入
-    // 限度額未満の購入をランダムに繰り返す
     let totalAmount = 0;
     let purchaseCount = 0;
-    const maxPurchases = Math.floor(Math.random() * (10000 - 100 + 1)) + 100; // 100回から10,000回のランダムな購入回数
-    console.log(maxPurchases)
+    const maxPurchases = Math.floor(Math.random() * (10000 - 100 + 1)) + 100;
     for (let i = 0; i < maxPurchases; i++) {
-      let purchaseAmount = Math.floor(Math.random() * (1000 - 100 + 1)) + 100; // 100円から1000円のランダムな金額
+      let purchaseAmount = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
       if (totalAmount + purchaseAmount >= limitAmount) {
-        purchaseAmount = limitAmount - totalAmount - 1; // 限度額を超えないように調整
+        purchaseAmount = limitAmount - totalAmount - 1;
       }
 
       response = purchase(purchaseAmount);
@@ -93,8 +105,7 @@ export default function () {
       totalAmount += purchaseAmount;
       purchaseCount = i;
       if (totalAmount >= limitAmount - 1) {
-        console.log(purchaseCount)
-        break; // 限度額に近づいたら終了
+        break;
       }
     }
 
@@ -120,13 +131,10 @@ export default function () {
     // Step 5: Get payment history
     response = http.get(`${BASE_URL}/payment/history/${replyAccount.cards[0].cardNumber}`, JSON_HEADER);
     let history = JSON.parse(response.body);
-    purchaseCount += 2
-    console.log(history.length)
-    console.log(purchaseCount)
+    purchaseCount += 2;
     check(response, { 'get payment history status is 200': (r) => r.status === 200 });
-    check(response, { 'history record counts is same with request counts': (r) => purchaseCount　=== JSON.parse(r.body).length });
+    check(response, { 'history record counts is same with request counts': (r) => purchaseCount === history.length });
 
-
-    sleep(1); // 各ステップの間に1秒の待機
+    sleep(1);
   });
 }

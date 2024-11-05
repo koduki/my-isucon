@@ -8,4 +8,4 @@ REM バックスラッシュをスラッシュに変換
 for /f "tokens=*" %%i in ('echo %SCRIPT_PATH:\=/%') do set SCRIPT_PATH=%%i
 
 REM docker-composeコマンドを実行
-docker-compose.exe run load-tester run --vus 1 --iterations 1 /workspace/%SCRIPT_PATH%
+docker-compose.exe run load-tester run /workspace/%SCRIPT_PATH%
