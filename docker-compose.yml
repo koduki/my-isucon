@@ -11,6 +11,12 @@ services:
     environment:
       - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
     command: /bin/sh -c 'while sleep 1000; do :; done'
+  database:
+    image: postgres:14.5
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password  
   load-tester:
     image: grafana/k6
     volumes:

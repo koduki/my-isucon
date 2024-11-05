@@ -6,6 +6,10 @@
 		"../../docker-compose.yml"
 	],
 	"service": "app",
+	"runServices": [
+		"app",
+		"database"
+	],
 	"workspaceFolder": "/workspace",
 	"customizations": {
 		"vscode": {
