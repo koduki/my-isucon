@@ -1,14 +1,9 @@
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
 
-export const options = {
-  vus: 10, // 仮想ユーザー数
-  duration: '30s', // テスト実行時間
-};
-
 const BASE_URL = 'http://app:8080'
 
-export default function () {
+export function functionalTestScenario() {
   group('Regular scenario', () => {
     const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
 
