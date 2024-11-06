@@ -17,7 +17,7 @@ java -jar target/spay-app.jar
 curl -i -X POST http://localhost:8080/account/ \
      -H "Content-Type: application/json" \
      -d '{
-           "userName": "John Doe"
+           "userName": "John Doeabc"
          }'
 
 curl -i -X POST http://localhost:8080/account/1/card \
@@ -38,19 +38,7 @@ curl -i -X GET http://localhost:8080/payment/history/9533636653254488\
      -H "Content-Type: application/json"
 ```
 
-```
-sudo gpg -k
-sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
 
-sudo apt-get update
-sudo apt-get install k6
-
-k6 version
-k6 run --vus 1 --iterations 1 
-k6 run functional-test.js
-
-```
 
 ## Try health and metrics
 

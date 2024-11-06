@@ -102,18 +102,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- H2 Database -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.199</version>
-            <scope>runtime</scope>
-        </dependency>
         <!-- PostgreSQL Database -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>
+            <version>42.6.1</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
