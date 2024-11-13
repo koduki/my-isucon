@@ -16,7 +16,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=password  
+      - POSTGRES_PASSWORD=password
+  monitoring:
+    image: debian 
   load-tester:
     image: grafana/k6
     volumes:

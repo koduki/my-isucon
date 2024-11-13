@@ -1,0 +1,313 @@
+schema: v2
+id: project_2.dashboard_21
+name: JVM CPU
+table:
+  - metrics: []
+    query:
+      - ""
+grid_rows:
+  - title: Row Title
+    items:
+      - title: HTTP-requests
+        width: 24
+        height: 29
+        type: chart
+        chart: area
+        metrics:
+          - http_server_request_duration as $duration
+        query:
+          - avg($duration)
+          - per_min(count($duration))
+        columns:
+          avg($duration):
+            unit: seconds
+            color: '#5470c6'
+          per_min(count($duration)):
+            color: '#91cc75'
+        styles:
+          avg(duration):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          avg(time):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(duration)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(time)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: CPU
+        width: 12
+        height: 28
+        y_axis: 29
+        type: chart
+        chart: line
+        metrics:
+          - jvm_cpu_recent_utilization as $utilization
+        query:
+          - avg($utilization)
+        columns:
+          avg($utilization):
+            color: '#91cc75'
+        styles:
+          avg(utilization):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(sum(time)):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: JVM-Thread
+        width: 12
+        height: 28
+        x_axis: 12
+        y_axis: 29
+        type: chart
+        chart: line
+        metrics:
+          - jvm_thread_count as $count
+        query:
+          - sum($count)
+        columns:
+          sum($count):
+            unit: '{thread}'
+            color: '#5470c6'
+        styles:
+          avg(utilization):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(count):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: JVM-Memory
+        width: 12
+        height: 28
+        y_axis: 57
+        type: chart
+        chart: line
+        metrics:
+          - jvm_memory_used as $used
+          - jvm_memory_used_after_last_gc as $gc
+          - jvm_memory_limit as $limit
+        query:
+          - sum($used)
+          - sum($gc)
+          - sum($limit)
+        columns:
+          sum($gc):
+            unit: bytes
+            color: '#91cc75'
+          sum($limit):
+            unit: bytes
+            color: '#fac858'
+          sum($used):
+            unit: bytes
+            color: '#5470c6'
+        styles:
+          avg(duration):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(duration)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(gc):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(limit):
+            color: '#fac858'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(used):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: GC
+        width: 12
+        height: 28
+        x_axis: 12
+        y_axis: 57
+        type: chart
+        chart: line
+        metrics:
+          - jvm_gc_duration as $duration
+        query:
+          - avg($duration)
+          - per_min(count($duration))
+        columns:
+          avg($duration):
+            unit: seconds
+            color: '#5470c6'
+          per_min(count($duration)):
+            color: '#91cc75'
+        styles:
+          avg(duration):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(duration)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(used):
+            color: '#fac858'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: DB Clients
+        width: 12
+        height: 28
+        y_axis: 85
+        type: chart
+        chart: line
+        metrics:
+          - db_client_connections_use_time as $time
+        query:
+          - avg($time)
+          - per_min(count($time))
+        columns:
+          avg($time):
+            unit: milliseconds
+            color: '#5470c6'
+          per_min(count($time)):
+            color: '#91cc75'
+        styles:
+          avg(time):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(time)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(max):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(usage):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: DB Conenction
+        width: 12
+        height: 28
+        x_axis: 12
+        y_axis: 85
+        type: chart
+        chart: line
+        metrics:
+          - db_client_connections_max as $max
+          - db_client_connections_usage as $usage
+        query:
+          - sum($max)
+          - sum($usage)
+        columns:
+          sum($max):
+            unit: '{connections}'
+            color: '#5470c6'
+          sum($usage):
+            unit: '{connections}'
+            color: '#91cc75'
+        styles:
+          sum(count):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(max):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(usage):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
