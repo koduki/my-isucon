@@ -31,12 +31,18 @@ receivers:
     protocols:
       grpc:
   postgresql:
-    endpoint: postgres:5432
+    # endpoint: postgres:5432
+    # transport: tcp
+    # username: uptrace
+    # password: uptrace
+    # databases:
+    #   - uptrace
+    endpoint: host.docker.internal:5432
     transport: tcp
-    username: uptrace
-    password: uptrace
+    username: postgres
+    password: password
     databases:
-      - uptrace
+      - postgres
     tls:
       insecure: true
   prometheus/otelcol:
@@ -46,8 +52,8 @@ receivers:
           scrape_interval: 10s
           static_configs:
             - targets: ['0.0.0.0:8888']
-  fluentforward:  # 追加
-    endpoint: 0.0.0.0:24224  # Fluent Bitが送信するポート
+  fluentforward: 
+    endpoint: 0.0.0.0:24224 
 
 processors:
   resourcedetection:
@@ -65,7 +71,6 @@ exporters:
     endpoint: 'http://uptrace:14318/api/v1/prometheus/write'
     tls:
       insecure: true
-    # headers: { 'uptrace-dsn': 'http://project1_secret_token@localhost:14318?grpc=14317' }
     headers: { 'uptrace-dsn': 'http://project2_secret_token@localhost:14318?grpc=14317' }
   logging:
     loglevel: debug
@@ -93,7 +98,7 @@ service:
       receivers: [otlp, fluentforward]  # fluentforwardを追加
       processors: [batch]
       exporters: [otlp/uptrace]
-      # exporters: [logging]  # 標準出力にエクスポート
+      # exporters: [logging]  # デバッグ用に出力
     metrics/prom:
       receivers: [prometheus/otelcol]
       processors: [batch]
