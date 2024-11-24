@@ -25,8 +25,7 @@ export OTEL_EXPORTER_OTLP_HEADERS="uptrace-dsn=http://project2_secret_token@loca
 export OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=DELTA
 export OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION=BASE2_EXPONENTIAL_BUCKET_HISTOGRAM
 
-
-export OTEL_EXPORTER_OTLP_ENDPOINT="http://host.docker.internal:14318"
+export JAVAX_SQL_DATASOURCE_PAYMENTDS_DATASOURCE_URL=jdbc:postgresql://localhost:5432/postgres
 java -javaagent:./opentelemetry-javaagent.jar -jar target/spay-app.jar 
 
 

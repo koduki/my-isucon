@@ -1,0 +1,84 @@
+gcloud compute ssh vm-mon001 --project ren-studio-ai --zone=asia-northeast1-a --tunnel-through-iap -- -L 0.0.0.0:24318:localhost:14318
+
+
+[pascalm3@vm-app002 example-app]$ git diff
+diff --git a/example-app/docker-compose.yml b/example-app/docker-compose.yml
+index d3c43ca..1e77307 100644
+--- a/example-app/docker-compose.yml
++++ b/example-app/docker-compose.yml
+@@ -17,9 +17,9 @@ services:
+     restart: unless-stopped
+     volumes:
+       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+-      - ./var/log:/var/log
++      - /var/log:/var/log
+     environment:
+-      - FLUENT_ELASTICSEARCH_HOST=host.docker.internal
++      - FLUENT_ELASTICSEARCH_HOST=10.146.0.6
+       - FLUENT_ELASTICSEARCH_PORT=24224
+ 
+ # services:
+@@ -42,4 +42,4 @@ services:
+ #       - SYS_ADMIN
+ #       - NET_ADMIN  # 追加
+ #     security_opt:
+-#       - seccomp:unconfined  # 追加
+\ No newline at end of file
++#       - seccomp:unconfined  # 追加
+diff --git a/example-app/src/main/resources/META-INF/microprofile-config.properties b/example-app/src/main/resources/META-INF/microprofile-config.properties
+index 61a8426..32484ad 100644
+--- a/example-app/src/main/resources/META-INF/microprofile-config.properties
++++ b/example-app/src/main/resources/META-INF/microprofile-config.properties
+@@ -24,7 +24,7 @@ server.host=0.0.0.0
+ # JPA設定
+ # データソース設定
+ javax.sql.DataSource.PaymentDS.dataSourceClassName=org.postgresql.ds.PGSimpleDataSource
+-javax.sql.DataSource.PaymentDS.dataSource.url=jdbc:postgresql://database:5432/postgres
+-# javax.sql.DataSource.PaymentDS.dataSource.url=jdbc:postgresql://localhost:5432/postgres
++#javax.sql.DataSource.PaymentDS.dataSource.url=jdbc:postgresql://database:5432/postgres
++javax.sql.DataSource.PaymentDS.dataSource.url=jdbc:postgresql://localhost:5432/postgres
+ javax.sql.DataSource.PaymentDS.dataSource.user=postgres
+ javax.sql.DataSource.PaymentDS.dataSource.password=password
+
+
+
+
+
+
+
+ ーーーーーーーーーーーーーーーーーー
+
+
+
+diff --git a/monitoring/config/prometheus/prometheus.yml b/monitoring/config/prometheus/prometheus.yml
+index bf725eb..92b91ec 100644
+--- a/monitoring/config/prometheus/prometheus.yml
++++ b/monitoring/config/prometheus/prometheus.yml
+@@ -17,10 +17,10 @@ scrape_configs:
+   - job_name: 'node-exporter'
+     scrape_interval: 15s
+     static_configs:
+-      - targets: ['host.docker.internal:9100']
+-  - job_name: docker
+-    static_configs:
+-      - targets: ['host.docker.internal:9323']
++      - targets: ['10.146.0.4:9100']
++#  - job_name: docker
++#    static_configs:
++#      - targets: ['host.docker.internal:9323']
+ 
+ remote_write:
+   - url: 'http://host.docker.internal:14318/api/v1/prometheus/write'
+diff --git a/monitoring/otel-collector.yaml b/monitoring/otel-collector.yaml
+index 365af2d..ebf51df 100644
+--- a/monitoring/otel-collector.yaml
++++ b/monitoring/otel-collector.yaml
+@@ -37,7 +37,7 @@ receivers:
+     # password: uptrace
+     # databases:
+     #   - uptrace
+-    endpoint: host.docker.internal:5432
++    endpoint: 10.146.0.4:5432
+     transport: tcp
+     username: postgres
+     password: password

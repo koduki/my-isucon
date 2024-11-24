@@ -86,7 +86,7 @@ auth:
     - name: Anonymous
       email: uptrace@localhost
       password: uptrace
-      notify_by_email: true
+      notify_by_email: false
 
   # Cloudflare Zero Trust Access (Identity)
   # See https://developers.cloudflare.com/cloudflare-one/identity/ for more info.
@@ -211,7 +211,7 @@ uptrace_go:
 ##
 smtp_mailer:
   # Whether to use this mailer for sending emails.
-  enabled: true
+  enabled: false
   # SMTP server host.
   host: mailpit
   # SMTP server port.

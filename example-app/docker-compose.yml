@@ -17,29 +17,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      # - /var/log:/var/log
       - ./var/log:/var/log
     environment:
-      - FLUENT_ELASTICSEARCH_HOST=host.docker.internal
-      - FLUENT_ELASTICSEARCH_PORT=24224
-
-# services:
-#   node_exporter:
-#     image: prom/node-exporter:latest
-#     restart: unless-stopped
-#     # network_mode: host
-#     # pid: host
-#     command:
-#       - '--path.procfs=/proc'
-#       - '--path.sysfs=/sys'
-#       - '--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+)($$|/)'
-#     volumes:
-#       - /proc:/proc:ro
-#       - /sys:/sys:ro
-#       - /proc/sys/net/ipv4/ping_group_range:/proc/sys/net/ipv4/ping_group_range:rw  # 追加
-#     ports:
-#      - '9100:9100'
-#     cap_add:
-#       - SYS_ADMIN
-#       - NET_ADMIN  # 追加
-#     security_opt:
-#       - seccomp:unconfined  # 追加
+      - OLT_EXPORTER_HOST=host.docker.internal
+      - OLT_EXPORTER_PORT=14224

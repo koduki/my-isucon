@@ -37,7 +37,7 @@ receivers:
     # password: uptrace
     # databases:
     #   - uptrace
-    endpoint: host.docker.internal:5432
+    endpoint: PG_SQL_ENDPOINT
     transport: tcp
     username: postgres
     password: password

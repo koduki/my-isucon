@@ -59,6 +59,8 @@ services:
       - '4317:4317'
       - '4318:4318'
       - '24224:24224'
+    environment:
+      PG_SQL_ENDPOINT: host.docker.internal:5432
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     depends_on:
