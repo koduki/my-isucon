@@ -1,9 +1,8 @@
-
-
 -- 既存のテーブルを削除
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS paymenttransactions;
+DROP TABLE IF EXISTS users;
+
 -- 既存のシーケンスを削除
 DROP SEQUENCE IF EXISTS user_sequence;
 DROP SEQUENCE IF EXISTS card_sequence;
@@ -15,10 +14,12 @@ CREATE SEQUENCE user_sequence START WITH 1;
 -- ユーザーテーブルの作成
 CREATE TABLE users (
     id BIGINT PRIMARY KEY DEFAULT nextval('user_sequence'),
+    customerNumber BIGINT NOT NULL,
     userName VARCHAR(255) UNIQUE NOT NULL,
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX idx_customer_number ON users(customerNumber);
 
 -- カードシーケンスの作成
 CREATE SEQUENCE card_sequence START WITH 1;

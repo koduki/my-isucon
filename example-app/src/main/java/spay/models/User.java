@@ -12,7 +12,10 @@ public class User implements Serializable {
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
+    private Long customerNumber;
+
+    @Column(nullable = false)
     private String userName;
 
     @Column(nullable = false)
@@ -47,6 +50,14 @@ public class User implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCustomerNumber() {
+        return customerNumber;
+    }
+
+    public void setCustomerNumber(Long customerNumber) {
+        this.customerNumber = customerNumber;
     }
 
     public String getUserName() {

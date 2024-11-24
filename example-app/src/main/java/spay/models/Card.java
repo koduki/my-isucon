@@ -11,7 +11,6 @@ public class Card implements Serializable {
     @SequenceGenerator(name = "card_seq", sequenceName = "card_sequence", allocationSize = 1)
     private Long id;
 
-
     @Column(unique = true, nullable = false)
     private String cardNumber;
 

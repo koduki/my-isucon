@@ -20,19 +20,23 @@ public class AccountService {
     private EntityManager em;
 
     public User registUser(User user) {
+        user.setCustomerNumber(generateCustomerNumber());
         em.persist(user);
-        addCard(user.getId());
+        addCard(user.getCustomerNumber());
 
         return user;
     }
 
-    public User getUser(long userId) {
-        User user = em.find(User.class, userId);
+    public User getUser(long customerNumber) {
+        User user = em.createQuery("SELECT u FROM User u WHERE u.customerNumber = :customerNumber", User.class)
+                .setParameter("customerNumber", customerNumber)
+                .getResultList()
+                .get(0);
         return user;
     }
 
-    public Card addCard(long userId) {
-        User user = getUser(userId);
+    public Card addCard(long customerNumber) {
+        User user = getUser(customerNumber);
 
         Card card = new Card();
         card.setCardNumber(generateCardNumber());
@@ -57,5 +61,10 @@ public class AccountService {
 
     private int generateLimitAmount() {
         return 1000000 + new Random().nextInt(9000000);
+    }
+
+    private long generateCustomerNumber() {
+        Random random = new Random(System.currentTimeMillis());
+        return 1000000000L + random.nextInt(900000000);
     }
 }
