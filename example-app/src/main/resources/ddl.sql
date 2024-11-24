@@ -1,12 +1,13 @@
+
+
+-- 既存のテーブルを削除
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS cards;
+DROP TABLE IF EXISTS paymenttransactions;
 -- 既存のシーケンスを削除
 DROP SEQUENCE IF EXISTS user_sequence;
 DROP SEQUENCE IF EXISTS card_sequence;
 DROP SEQUENCE IF EXISTS transaction_sequence;
-
--- 既存のテーブルを削除
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS card;
-DROP TABLE IF EXISTS paymenttransaction;
 
 -- ユーザーシーケンスの作成
 CREATE SEQUENCE user_sequence START WITH 1;
