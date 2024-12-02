@@ -8,6 +8,7 @@ import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -20,27 +21,32 @@ public class PaymentService {
     private EntityManager em;
 
     public PaymentTransaction purchase(PaymentTransaction request) throws LimitExceededException {
-        Card card = em.createQuery("SELECT c FROM Card c WHERE c.cardNumber = :cardNumber", Card.class)
-                .setParameter("cardNumber", request.getCardNumber())
-                .getSingleResult();
-        verifyLimit(request.getAmount(), card);
+        List<Card> cards = em.createQuery("SELECT c FROM Card c", Card.class)
+                .getResultList();
+        Card card = null;
+        for (Card c : cards) {
+            if (c.getCardNumber().equals(request.getCardNumber())) {
+                card = c;
+                verifyLimit(request.getAmount(), card);
 
-        card.setUsedAmount(card.getUsedAmount() + request.getAmount());
-        PaymentTransaction transaction = new PaymentTransaction();
-        transaction.setCardNumber(card.getCardNumber());
-        transaction.setItemName(request.getItemName());
-        transaction.setAmount(request.getAmount());
-        em.persist(transaction);
+                card.setUsedAmount(card.getUsedAmount() + request.getAmount());
+                PaymentTransaction transaction = new PaymentTransaction();
+                transaction.setCardNumber(card.getCardNumber());
+                transaction.setItemName(request.getItemName());
+                transaction.setAmount(request.getAmount());
+                em.persist(transaction);
 
-        return transaction;
+                return transaction;
+            }
+        }
+        return null;
     }
 
     public List<PaymentTransaction> history(String cardNumber) {
-        return em
-                .createQuery("SELECT pt FROM PaymentTransaction pt WHERE pt.cardNumber = :cardNumber",
-                        PaymentTransaction.class)
-                .setParameter("cardNumber", cardNumber)
+        List<PaymentTransaction> list = em.createQuery("SELECT t FROM PaymentTransaction t",
+                PaymentTransaction.class)
                 .getResultList();
+        return list.stream().filter(t -> t.getCardNumber().equals(cardNumber)).collect(Collectors.toList());
     }
 
     private void verifyLimit(int requestAmount, Card card) throws LimitExceededException {

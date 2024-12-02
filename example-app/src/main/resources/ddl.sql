@@ -19,7 +19,7 @@ CREATE TABLE users (
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_customer_number ON users(customerNumber);
+-- CREATE INDEX idx_customer_number ON users(customerNumber);
 
 -- カードシーケンスの作成
 CREATE SEQUENCE card_sequence START WITH 1;
