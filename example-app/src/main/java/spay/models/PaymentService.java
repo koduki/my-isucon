@@ -5,8 +5,7 @@
 package spay.models;
 
 import javax.enterprise.context.Dependent;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,16 +16,16 @@ import java.util.stream.Collectors;
 @Dependent
 public class PaymentService {
 
-    @PersistenceContext
-    private EntityManager em;
+    @Inject
+    TransactionDao transactionDao;
 
-    public PaymentTransaction purchase(PaymentTransaction request) throws LimitExceededException {
-        List<Card> cards = em.createQuery("SELECT c FROM Card c", Card.class)
-                .getResultList();
-        Card card = null;
-        for (Card c : cards) {
-            if (c.getCardNumber().equals(request.getCardNumber())) {
-                card = c;
+    @Inject
+    CardDao cardDao;
+
+    public PaymentTransaction purchase(PaymentTransaction request) throws LimitExceededException, InvalidCardException {
+        for (Card card : cardDao.list()) {
+            if (card.getCardNumber().equals(request.getCardNumber())) {
+                verifyValid(card);
                 verifyLimit(request.getAmount(), card);
 
                 card.setUsedAmount(card.getUsedAmount() + request.getAmount());
@@ -34,7 +33,7 @@ public class PaymentService {
                 transaction.setCardNumber(card.getCardNumber());
                 transaction.setItemName(request.getItemName());
                 transaction.setAmount(request.getAmount());
-                em.persist(transaction);
+                transactionDao.add(transaction);
 
                 return transaction;
             }
@@ -43,10 +42,9 @@ public class PaymentService {
     }
 
     public List<PaymentTransaction> history(String cardNumber) {
-        List<PaymentTransaction> list = em.createQuery("SELECT t FROM PaymentTransaction t",
-                PaymentTransaction.class)
-                .getResultList();
-        return list.stream().filter(t -> t.getCardNumber().equals(cardNumber)).collect(Collectors.toList());
+        return transactionDao.stream()
+                .filter(t -> t.getCardNumber().equals(cardNumber))
+                .collect(Collectors.toList());
     }
 
     private void verifyLimit(int requestAmount, Card card) throws LimitExceededException {
@@ -55,4 +53,9 @@ public class PaymentService {
         }
     }
 
+    private void verifyValid(Card card) throws InvalidCardException {
+        if (!card.isEnable()) {
+            throw new InvalidCardException();
+        }
+    }
 }

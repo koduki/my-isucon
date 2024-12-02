@@ -16,24 +16,23 @@ import javax.persistence.PersistenceContext;
  * @author koduki
  */
 @Dependent
-public class CardDao {
+public class TransactionDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    public Card add(Card card) {
-        em.persist(card);
+    public PaymentTransaction add(PaymentTransaction transaction) {
+        em.persist(transaction);
 
-        return card;
+        return transaction;
     }
 
-    public List<Card> list() {
+    public List<PaymentTransaction> list() {
         return em
-                .createQuery("SELECT c FROM Card c", Card.class)
+                .createQuery("SELECT t FROM PaymentTransaction t", PaymentTransaction.class)
                 .getResultList();
     }
-
-    public Stream<Card> stream() {
+    public Stream<PaymentTransaction> stream() {
         return this.list().stream();
     }
 }

@@ -55,11 +55,12 @@ public class AccountService {
         card.setCardNumber(generateCardNumber());
         card.setLimitAmount(generateLimitAmount());
         card.setUsedAmount(0);
+        card.setEnable(true);
 
-        int cardType = new java.util.Random().nextInt(2);
+        int cardType = generateCardType();
         card.setCardType(cardType);
         String imagePath = cardType == 0 ? "images/card_normal.png"
-                        : cardType == 1 ? "images/card_gold.png"
+                : cardType == 1 ? "images/card_gold.png"
                         : null;
         byte[] cardFace = readImage(imagePath);
         card.setCardFace(cardFace);
@@ -70,6 +71,15 @@ public class AccountService {
         userDao.add(user);
 
         return card;
+    }
+
+    public void disableCard(String cardNumber) {
+        cardDao.stream().filter(c -> c.getCardNumber().equals(cardNumber))
+                .map(c -> {
+                    c.setEnable(false);
+                    return c;
+                })
+                .forEach(c -> cardDao.add(c));
     }
 
     private String generateCardNumber() {
@@ -111,4 +121,9 @@ public class AccountService {
             throw new UncheckedIOException(e);
         }
     }
+
+    private int generateCardType() {
+        return new java.util.Random().nextInt(2);
+    }
+
 }

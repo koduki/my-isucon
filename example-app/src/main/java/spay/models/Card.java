@@ -120,11 +120,11 @@ public class Card implements Serializable {
         this.cardFace = java.util.Base64.getDecoder().decode(encodedCardFace);
     }
 
-    public boolean isIsEnable() {
+    public boolean isEnable() {
         return isEnable;
     }
 
-    public void setIsEnable(boolean isEnable) {
+    public void setEnable(boolean isEnable) {
         this.isEnable = isEnable;
     }
 

@@ -29,6 +29,10 @@ public class PaymentResource {
             return Response.status(422) // UNPROCESSABLE_ENTITY
                     .entity("Limit exceeded")
                     .build();
+        } catch (InvalidCardException e) {
+            return Response.status(422) // UNPROCESSABLE_ENTITY
+                    .entity("Invalid Card")
+                    .build();
         }
     }
 

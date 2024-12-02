@@ -114,4 +114,49 @@ export function functionalTestScenario() {
       errorCounter.add(1); // エラーが発生した場合にカウンターをインクリメント
     }
   });
+
+  group('Invalid Card scenario', () => {
+    try {
+      const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
+
+      // ユーザの作成
+      const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;
+      let response = http.post(`${BASE_URL}/account/`, JSON.stringify({ userName: randomUserName }), JSON_HEADER);
+      let account = JSON.parse(response.body);
+      let cardNumber = account.cards[0].cardNumber;
+
+      // 購入。初期状態はカードが有効なので正常
+      let amount = 1;
+      response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
+        cardNumber: cardNumber,
+        itemName: 'Sample Item',
+        amount: amount,
+      }), JSON_HEADER);
+      check(response, { 'purchase status is 200': (r) => r.status === 200 });
+
+      // カードを無効化
+      response = http.del(`${BASE_URL}/account/cards/${cardNumber}`, null, JSON_HEADER);
+      check(response, {
+        'disable-card is 200': (r) => r.status === 200,
+        'disable-card is returned card number': (r) => r.body.includes(cardNumber),
+      });
+
+      // 購入。無効なのでエラーが発生するべき
+      amount = 1;
+      response = http.post(`${BASE_URL}/payment/purchase`, JSON.stringify({
+        cardNumber: cardNumber,
+        itemName: 'Sample Item',
+        amount: amount,
+      }), JSON_HEADER);
+      check(response, {
+        'purchase status is 422 if invalid-card': (r) => r.status === 422,
+        'purchase body is invalid-card': (r) => r.body === 'Invalid Card'
+      });
+
+      sleep(1); // 各ステップの間に1秒の待機
+    } catch (error) {
+      console.error(error.message);
+      errorCounter.add(1); // エラーが発生した場合にカウンターをインクリメント
+    }
+  });
 }

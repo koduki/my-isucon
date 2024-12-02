@@ -43,4 +43,14 @@ public class AccountResource {
         Card res = service.issueCard(userId);
         return Response.ok(res).build();
     }
+
+    @DELETE
+    @Path("/cards/{card_number}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response disableCard(@PathParam("card_number") String cardNumber) {
+        service.disableCard(cardNumber);
+        return Response.ok(cardNumber).build();
+    }
 }
