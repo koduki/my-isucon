@@ -2,6 +2,7 @@ package spay.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "cards")
@@ -25,6 +26,14 @@ public class Card implements Serializable {
 
     @Column(nullable = false)
     private java.sql.Timestamp updatedAt;
+
+    @Lob
+    @Column(name = "card_face")
+    @XmlTransient 
+    private byte[] cardFace;
+
+    @Transient
+    private String encodedCardFace;
 
     // デフォルトコンストラクタ
     public Card() {
@@ -88,5 +97,21 @@ public class Card implements Serializable {
 
     public void setUpdatedAt(java.sql.Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public byte[] getCardFace() {
+        return cardFace;
+    }
+
+    public void setCardFace(byte[] cardFace) {
+        this.cardFace = cardFace;
+    }
+
+    public String getEncodedCardFace() {
+        return java.util.Base64.getEncoder().encodeToString(cardFace);
+    }
+
+    public void setEncodedCardFace(String encodedCardFace) {
+        this.cardFace = java.util.Base64.getDecoder().decode(encodedCardFace);
     }
 }

@@ -32,7 +32,10 @@ CREATE TABLE cards (
     usedAmount INTEGER NOT NULL DEFAULT 0,
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_id BIGINT REFERENCES users(id)
+    user_id BIGINT REFERENCES users(id),
+    is_enable BOOLEAN NOT NULL,
+    card_type INTEGER NOT NULL,
+    card_face BYTEA
 );
 
 -- トランザクションシーケンスの作成

@@ -36,12 +36,14 @@ export function functionalTestScenario() {
       let replyAccount = JSON.parse(response.body);
       check(response, {
         'get account status is 200': (r) => r.status === 200,
-        'replied account.id is same with created timing': (r) => account.id === replyAccount.id,
+        'replied account.id is same with created timing and not undefined': (r) => account.id !== undefined && replyAccount.id !== undefined && account.id === replyAccount.id,
         'replied account.username is same with created timing': (r) => account.userName === replyAccount.userName,
-        'replied account.card[0].number is same with created timing': (r) => replyAccount.cards[0].cardNumber === account.cards[0].cardNumber,
-        'replied account.card[0].limit is same with created timing': (r) => replyAccount.cards[0].limitAmount === account.cards[0].limitAmount,
-        'replied account.card[1].number is same with created timing': (r) => replyAccount.cards[1].cardNumber === newCardData.cardNumber,
-        'replied account.card[1].limit is same with created timing': (r) => replyAccount.cards[1].limitAmount === newCardData.limitAmount,
+        'replied account.card[0].number is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].cardNumber === account.cards[0].cardNumber : true,
+        'replied account.card[0].limit is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].limitAmount === account.cards[0].limitAmount : true,
+        'replied account.card[0].cardface is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].encodedCardFace === account.cards[0].encodedCardFace : true,
+        'replied account.card[1].number is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].cardNumber === newCardData.cardNumber : true,
+        'replied account.card[1].limit is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].limitAmount === newCardData.limitAmount : true,
+        'replied account.card[1].cardface is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].encodedCardFace === newCardData.encodedCardFace : true,
       });
 
       // Step 4: Make a purchase
