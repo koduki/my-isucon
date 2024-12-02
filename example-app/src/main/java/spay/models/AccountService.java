@@ -64,7 +64,7 @@ public class AccountService {
     }
 
     private long generateCustomerNumber() {
-        Random random = new Random(System.currentTimeMillis());
+        Random random = new Random(System.nanoTime());
         return 1000000000L + random.nextInt(900000000);
     }
 }
