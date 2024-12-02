@@ -27,6 +27,12 @@ public class Card implements Serializable {
     @Column(nullable = false)
     private java.sql.Timestamp updatedAt;
 
+    @Column(name = "is_enable", nullable = false)
+    private boolean isEnable;
+
+    @Column(nullable = false)
+    private int cardType;
+
     @Lob
     @Column(name = "card_face")
     @XmlTransient 
@@ -34,7 +40,6 @@ public class Card implements Serializable {
 
     @Transient
     private String encodedCardFace;
-
     // デフォルトコンストラクタ
     public Card() {
     }
@@ -113,5 +118,21 @@ public class Card implements Serializable {
 
     public void setEncodedCardFace(String encodedCardFace) {
         this.cardFace = java.util.Base64.getDecoder().decode(encodedCardFace);
+    }
+
+    public boolean isIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(boolean isEnable) {
+        this.isEnable = isEnable;
+    }
+
+    public int getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(int cardType) {
+        this.cardType = cardType;
     }
 }

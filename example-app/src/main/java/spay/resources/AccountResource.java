@@ -40,7 +40,7 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response addCard(@PathParam("user_id") Long userId) {
-        Card res = service.addCard(userId);
+        Card res = service.issueCard(userId);
         return Response.ok(res).build();
     }
 }

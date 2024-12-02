@@ -34,7 +34,7 @@ CREATE TABLE cards (
     updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     user_id BIGINT REFERENCES users(id),
     is_enable BOOLEAN NOT NULL,
-    card_type INTEGER NOT NULL,
+    cardtype INTEGER NOT NULL,
     card_face BYTEA
 );
 

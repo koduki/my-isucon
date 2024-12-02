@@ -30,7 +30,7 @@ public class AccountService {
     public User registUser(User user) {
         user.setCustomerNumber(generateCustomerNumber());
         userDao.add(user);
-        addCard(user.getCustomerNumber());
+        issueCard(user.getCustomerNumber());
 
         return user;
     }
@@ -48,7 +48,7 @@ public class AccountService {
         return null;
     }
 
-    public Card addCard(long customerNumber) {
+    public Card issueCard(long customerNumber) {
         User user = getUser(customerNumber);
 
         Card card = new Card();
@@ -56,7 +56,12 @@ public class AccountService {
         card.setLimitAmount(generateLimitAmount());
         card.setUsedAmount(0);
 
-        byte[] cardFace = readImage("images/card_normal.png");
+        int cardType = new java.util.Random().nextInt(2);
+        card.setCardType(cardType);
+        String imagePath = cardType == 0 ? "images/card_normal.png"
+                        : cardType == 1 ? "images/card_gold.png"
+                        : null;
+        byte[] cardFace = readImage(imagePath);
         card.setCardFace(cardFace);
 
         cardDao.add(card);
@@ -89,7 +94,7 @@ public class AccountService {
         System.out.println(getClass().getClassLoader().getResource("."));
 
         System.out.println(getClass().getClassLoader().getResource(path));
-        try (InputStream is =  ClassLoader.getSystemResourceAsStream(path)) {
+        try (InputStream is = ClassLoader.getSystemResourceAsStream(path)) {
             if (is != null) {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 int nRead;
