@@ -4,8 +4,8 @@
  */
 package spay.models;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 

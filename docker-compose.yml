@@ -1,7 +1,7 @@
 services:
   app:
     user: root
-    image: mcr.microsoft.com/devcontainers/java:1-8-bullseye
+    image: mcr.microsoft.com/devcontainers/java:21-bullseye
     volumes:
       - ./example-app:/workspace
       - ./example-app/.devcontainer/m2_repo:/root/.m2

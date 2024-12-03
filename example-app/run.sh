@@ -14,4 +14,4 @@ export OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION=BASE2_EXPONENTIA
 # export JAVAX_SQL_DATASOURCE_PAYMENTDS_DATASOURCE_URL=jdbc:postgresql://localhost:5432/postgres
 export JAVAX_SQL_DATASOURCE_PAYMENTDS_DATASOURCE_URL=jdbc:postgresql://database:5432/postgres
 
-java -javaagent:./opentelemetry-javaagent.jar -jar target/spay-app.jar 
+java --add-opens java.base/java.lang=ALL-UNNAMED -javaagent:./opentelemetry-javaagent.jar -jar target/spay-app.jar 

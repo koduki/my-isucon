@@ -1,8 +1,8 @@
 package spay.models;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "cards")
