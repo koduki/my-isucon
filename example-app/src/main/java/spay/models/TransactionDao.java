@@ -21,18 +21,19 @@ public class TransactionDao {
     @PersistenceContext
     private EntityManager em;
 
-    public PaymentTransaction add(PaymentTransaction transaction) {
+    public PaymentTransaction persist(PaymentTransaction transaction) {
         em.persist(transaction);
 
         return transaction;
     }
 
-    public List<PaymentTransaction> list() {
+    public List<PaymentTransaction> list(String cardNumber) {
         return em
-                .createQuery("SELECT t FROM PaymentTransaction t", PaymentTransaction.class)
+                .createQuery("SELECT t FROM PaymentTransaction t where t.cardNumber = :cardNumber", PaymentTransaction.class)
+                .setParameter("cardNumber", cardNumber)
                 .getResultList();
     }
-    public Stream<PaymentTransaction> stream() {
-        return this.list().stream();
+    public Stream<PaymentTransaction> stream(String cardNumber) {
+        return this.list(cardNumber).stream();
     }
 }

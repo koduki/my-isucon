@@ -19,16 +19,17 @@ public class UserDao {
     @PersistenceContext
     private EntityManager em;
 
-    public User add(User user) {
+    public User persist(User user) {
         em.persist(user);
 
         return user;
     }
 
-    public Stream<User> stream() {
+    public User get(long customerNumber) {
         return em
-                .createQuery("SELECT u FROM User u", User.class)
-                .getResultList().stream();
+                .createQuery("SELECT u FROM User u WHERE u.customerNumber = :customerNumber", User.class)
+                .setParameter("customerNumber", customerNumber)
+                .getSingleResult();
     }
 
 }

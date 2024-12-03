@@ -21,19 +21,25 @@ public class CardDao {
     @PersistenceContext
     private EntityManager em;
 
-    public Card add(Card card) {
+    public Card persist(Card card) {
         em.persist(card);
 
         return card;
     }
 
-    public List<Card> list() {
+    public List<Card> list(String cardNumber) {
         return em
-                .createQuery("SELECT c FROM Card c", Card.class)
+                .createQuery("SELECT c FROM Card c WHERE c.cardNumber = :cardNumber", Card.class)
+                .setParameter("cardNumber", cardNumber)
                 .getResultList();
     }
 
-    public Stream<Card> stream() {
-        return this.list().stream();
+    public Stream<Card> stream(String cardNumber) {
+        return this.list(cardNumber).stream();
+    }
+    public Card get(String cardNumber) {
+        return em.createQuery("SELECT c FROM Card c WHERE c.cardNumber = :cardNumber", Card.class)
+                .setParameter("cardNumber", cardNumber)
+                .getSingleResult();
     }
 }

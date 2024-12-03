@@ -29,23 +29,15 @@ public class AccountService {
 
     public User registUser(User user) {
         user.setCustomerNumber(generateCustomerNumber());
-        userDao.add(user);
+        userDao.persist(user);
         issueCard(user.getCustomerNumber());
 
         return user;
     }
 
     public User getUser(long customerNumber) {
-        List<User> users = userDao.stream()
-                .filter(u -> u.getCustomerNumber().equals(customerNumber))
-                .collect(Collectors.toList());
-
-        for (User u : users) {
-            if (u.getCustomerNumber().equals(customerNumber)) {
-                return u;
-            }
-        }
-        return null;
+        User user = userDao.get(customerNumber);
+        return user;
     }
 
     public Card issueCard(long customerNumber) {
@@ -65,21 +57,18 @@ public class AccountService {
         byte[] cardFace = readImage(imagePath);
         card.setCardFace(cardFace);
 
-        cardDao.add(card);
+        cardDao.persist(card);
 
         user.getCards().add(card);
-        userDao.add(user);
+        userDao.persist(user);
 
         return card;
     }
 
     public void disableCard(String cardNumber) {
-        cardDao.stream().filter(c -> c.getCardNumber().equals(cardNumber))
-                .map(c -> {
-                    c.setEnable(false);
-                    return c;
-                })
-                .forEach(c -> cardDao.add(c));
+        Card card = cardDao.get(cardNumber);
+        card.setEnable(false);
+        cardDao.persist(card);
     }
 
     private String generateCardNumber() {
@@ -101,9 +90,6 @@ public class AccountService {
     }
 
     private byte[] readImage(String path) {
-        System.out.println(getClass().getClassLoader().getResource("."));
-
-        System.out.println(getClass().getClassLoader().getResource(path));
         try (InputStream is = ClassLoader.getSystemResourceAsStream(path)) {
             if (is != null) {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
