@@ -38,14 +38,14 @@ export function functionalTestScenario() {
         'get account status is 200': (r) => r.status === 200,
         'replied account.id is same with created timing and not undefined': (r) => account.id !== undefined && replyAccount.id !== undefined && account.id === replyAccount.id,
         'replied account.username is same with created timing': (r) => account.userName === replyAccount.userName,
-        'replied account.card[0].number is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].cardNumber === account.cards[0].cardNumber : true,
-        'replied account.card[0].limit is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].limitAmount === account.cards[0].limitAmount : true,
-        'replied account.card[0].cardType is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].cardType === account.cards[0].cardType : true,
-        'replied account.card[0].cardface is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[0]) ? replyAccount.cards[0].encodedCardFace === account.cards[0].encodedCardFace : true,
-        'replied account.card[1].number is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].cardNumber === newCardData.cardNumber : true,
-        'replied account.card[1].limit is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].limitAmount === newCardData.limitAmount : true,
-        'replied account.card[1].cardface is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].encodedCardFace === newCardData.encodedCardFace : true,
-        'replied account.card[1].cardType is same with created timing': (r) => (replyAccount.cards && replyAccount.cards[1]) ? replyAccount.cards[1].cardType === newCardData.cardType : true,
+        'replied account.card[0].number is same with created timing': (r) => replyAccount.cards[0].cardNumber === account.cards[0].cardNumber,
+        'replied account.card[0].limit is same with created timing': (r) => replyAccount.cards[0].limitAmount === account.cards[0].limitAmount,
+        'replied account.card[0].cardType is same with created timing': (r) => replyAccount.cards[0].cardType === account.cards[0].cardType,
+        'replied account.card[0].cardface is same with created timing': (r) => replyAccount.cards[0].encodedCardFace === account.cards[0].encodedCardFace,
+        'replied account.card[1].number is same with created timing': (r) => replyAccount.cards[1].cardNumber === newCardData.cardNumber,
+        'replied account.card[1].limit is same with created timing': (r) => replyAccount.cards[1].limitAmount === newCardData.limitAmount,
+        'replied account.card[1].cardface is same with created timing': (r) => replyAccount.cards[1].encodedCardFace === newCardData.encodedCardFace,
+        'replied account.card[1].cardType is same with created timing': (r) => replyAccount.cards[1].cardType === newCardData.cardType,
       });
 
       // Step 4: Make a purchase
@@ -63,18 +63,21 @@ export function functionalTestScenario() {
 
       sleep(1); // 各ステップの間に1秒の待機
     } catch (error) {
+      console.log("Hello")
       console.error(error.message);
       errorCounter.add(1); // エラーが発生した場合にカウンターをインクリメント
     }
   });
 
   group('Limit Over scenario', () => {
+    let hoge;
     try {
       const JSON_HEADER = { headers: { 'Content-Type': 'application/json' } }
 
       // ユーザの作成
       const randomUserName = `User_${Math.random().toString(36).substring(2, 10)}`;
       let response = http.post(`${BASE_URL}/account/`, JSON.stringify({ userName: randomUserName }), JSON_HEADER);
+      hoge = response;
       let account = JSON.parse(response.body);
       const limitAmount = account.cards[0].limitAmount;
 
@@ -85,6 +88,8 @@ export function functionalTestScenario() {
         itemName: 'Sample Item',
         amount: amount,
       }), JSON_HEADER);
+      hoge = response;
+
       check(response, { 'purchase status is 200 if under limit': (r) => r.status === 200 });
 
       // 限度額と同値の購入
@@ -94,6 +99,8 @@ export function functionalTestScenario() {
         itemName: 'Sample Item',
         amount: amount,
       }), JSON_HEADER);
+      hoge = response;
+
       check(response, { 'purchase status is 200 if equal to limit': (r) => r.status === 200 });
 
       // 限度額を超えた購入
@@ -103,6 +110,8 @@ export function functionalTestScenario() {
         itemName: 'Sample Item',
         amount: amount,
       }), JSON_HEADER);
+      hoge = response;
+
       check(response, {
         'purchase status is 422 if over limit': (r) => r.status === 422,
         'purchase body is Limit exceeded': (r) => r.body === 'Limit exceeded'
@@ -110,6 +119,12 @@ export function functionalTestScenario() {
 
       sleep(1); // 各ステップの間に1秒の待機
     } catch (error) {
+      console.log("foo")
+      console.log(error)
+      console.log(hoge)
+
+      console.log("/bar")
+
       console.error(error.message);
       errorCounter.add(1); // エラーが発生した場合にカウンターをインクリメント
     }
