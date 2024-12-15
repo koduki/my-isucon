@@ -26,11 +26,11 @@ public class PaymentResource {
             PaymentTransaction transaction = service.purchase(request);
             return Response.ok(transaction).build();
         } catch (LimitExceededException e) {
-            return Response.status(422) // UNPROCESSABLE_ENTITY
+            return Response.status(200) // UNPROCESSABLE_ENTITY
                     .entity("Limit exceeded")
                     .build();
         } catch (InvalidCardException e) {
-            return Response.status(422) // UNPROCESSABLE_ENTITY
+            return Response.status(200) // UNPROCESSABLE_ENTITY
                     .entity("Invalid Card")
                     .build();
         }

@@ -113,7 +113,7 @@ export function functionalTestScenario() {
       hoge = response;
 
       check(response, {
-        'purchase status is 422 if over limit': (r) => r.status === 422,
+        'purchase status is 200 if over limit': (r) => r.status === 200,
         'purchase body is Limit exceeded': (r) => r.body === 'Limit exceeded'
       });
 
@@ -164,7 +164,7 @@ export function functionalTestScenario() {
         amount: amount,
       }), JSON_HEADER);
       check(response, {
-        'purchase status is 422 if invalid-card': (r) => r.status === 422,
+        'purchase status is 200 if invalid-card': (r) => r.status === 200,
         'purchase body is invalid-card': (r) => r.body === 'Invalid Card'
       });
 
