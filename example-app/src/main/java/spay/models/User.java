@@ -2,6 +2,8 @@ package spay.models;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +28,7 @@ public class User implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id") // 外部キーを指定
-    private List<Card> cards;
+    private List<Card>  cards = new ArrayList<>(); 
 
     // デフォルトコンストラクタ
     public User() {

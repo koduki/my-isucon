@@ -1,23 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd"
-    version="3.1">
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+    version="3.0">
 
     <persistence-unit name="paymentPU" transaction-type="JTA">
         <jta-data-source>PaymentDS</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
         <properties>
-            <!-- <property name="eclipselink.ddl-generation" value="create-tables"/>
-            <property name="eclipselink.ddl-generation.output-mode" value="database"/> -->
-            <property name="eclipselink.logging.level" value="FINE" />
-            <property name="eclipselink.logging.parameters" value="true" />
-            <property name="eclipselink.deploy-on-startup" value="true" />
-            <property name="eclipselink.jdbc.native-sql" value="true" />
-            <property name="eclipselink.target-database"
-                value="org.eclipse.persistence.platform.database.PostgreSQLPlatform" />
-            <property name="eclipselink.target-server"
-                value="io.helidon.integrations.cdi.eclipselink.CDISEPlatform" />
-            <property name="eclipselink.weaving" value="false" />
+            <property name="hibernate.archive.autodetection" value="class,hbm" />
         </properties>
     </persistence-unit>
 </persistence>
