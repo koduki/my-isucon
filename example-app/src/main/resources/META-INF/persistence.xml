@@ -5,7 +5,7 @@
     version="3.0">
 
     <persistence-unit name="paymentPU" transaction-type="JTA">
-        <jta-data-source>PaymentDS</jta-data-source>
+        <jta-data-source>HikariPool-1</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties> 
             <!-- <property name="eclipselink.ddl-generation" value="create-tables"/>
