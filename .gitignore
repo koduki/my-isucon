@@ -3,3 +3,4 @@ m2_repo
 ObjectStore
 PutObjectStoreDirHere
 *.xlsx
+*.db

@@ -1,0 +1,256 @@
+schema: v2
+id: project_2.dashboard_64
+name: Java Application
+table:
+  - metrics: []
+    query:
+      - ""
+grid_rows:
+  - title: Row Title
+    items:
+      - title: Heap Memory
+        width: 12
+        height: 28
+        type: chart
+        chart: area
+        metrics:
+          - jvm_memory_used as $used
+          - jvm_memory_limit as $limit
+        query:
+          - sum($used)
+          - sum($limit)
+        columns:
+          sum($limit):
+            unit: bytes
+            color: '#91cc75'
+          sum($used):
+            unit: bytes
+            color: '#5470c6'
+        styles:
+          sum(limit):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(requests):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(used):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: JVM GC duration
+        width: 12
+        height: 28
+        x_axis: 12
+        type: chart
+        chart: area
+        metrics:
+          - jvm_gc_duration as $duration
+        query:
+          - avg($duration)
+          - per_min(count($duration))
+        columns:
+          avg($duration):
+            unit: seconds
+            color: '#5470c6'
+          per_min(count($duration)):
+            color: '#91cc75'
+        styles:
+          avg(duration):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(duration)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(count):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: Thread Count
+        width: 12
+        height: 28
+        y_axis: 28
+        type: chart
+        chart: area
+        metrics:
+          - jvm_thread_count as $count
+        query:
+          - sum($count)
+        columns:
+          sum($count):
+            unit: '{thread}'
+            color: '#5470c6'
+        styles:
+          sum(count):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: DB Connection Max
+        width: 12
+        height: 28
+        x_axis: 12
+        y_axis: 28
+        type: chart
+        chart: area
+        metrics:
+          - db_client_connections_max as $max
+        query:
+          - sum($max)
+        columns:
+          sum($max):
+            unit: '{connections}'
+            color: '#5470c6'
+        styles:
+          avg(time):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(time)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(max):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(requests):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: db-connection-pending-requests
+        width: 12
+        height: 28
+        y_axis: 56
+        type: chart
+        chart: line
+        metrics:
+          - db_client_connections_pending_requests as $requests
+        query:
+          - sum($requests)
+        columns:
+          sum($requests):
+            unit: '{requests}'
+            color: '#5470c6'
+        styles:
+          sum(max):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(requests):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
+      - title: DB Connection create time
+        width: 12
+        height: 28
+        x_axis: 12
+        y_axis: 56
+        type: chart
+        chart: area
+        metrics:
+          - db_client_connections_create_time as $time
+        query:
+          - avg($time)
+          - per_min(count($time))
+        columns:
+          avg($time):
+            unit: milliseconds
+            color: '#91cc75'
+          per_min(count($time)):
+            color: '#fac858'
+        styles:
+          avg(duration):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          avg(time):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(duration)):
+            color: '#91cc75'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          per_min(count(time)):
+            color: '#fac858'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(max):
+            color: '#ee6666'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          sum(min):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
