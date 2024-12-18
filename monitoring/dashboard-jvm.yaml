@@ -8,9 +8,34 @@ table:
 grid_rows:
   - title: Row Title
     items:
+      - title: CPU
+        width: 12
+        height: 28
+        type: chart
+        chart: line
+        metrics:
+          - jvm_cpu_recent_utilization as $utilization
+        query:
+          - avg($utilization)
+        columns:
+          avg($utilization):
+            color: '#5470c6'
+        styles:
+          avg(utilization):
+            color: '#5470c6'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+        legend:
+          type: list
+          placement: bottom
+          values:
+            - avg
       - title: Heap Memory
         width: 12
         height: 28
+        x_axis: 12
         type: chart
         chart: area
         metrics:
@@ -53,7 +78,7 @@ grid_rows:
       - title: JVM GC duration
         width: 12
         height: 28
-        x_axis: 12
+        y_axis: 28
         type: chart
         chart: area
         metrics:
@@ -94,6 +119,7 @@ grid_rows:
       - title: Thread Count
         width: 12
         height: 28
+        x_axis: 12
         y_axis: 28
         type: chart
         chart: area
@@ -117,42 +143,64 @@ grid_rows:
           placement: bottom
           values:
             - avg
-      - title: DB Connection Max
+      - title: DB Client Connections
         width: 12
         height: 28
-        x_axis: 12
-        y_axis: 28
+        y_axis: 56
         type: chart
         chart: area
         metrics:
+          - db_client_connections_usage as $usage
           - db_client_connections_max as $max
+          - db_client_connections_idle_min as $min
         query:
+          - sum($usage)
           - sum($max)
+          - avg($min)
+          - per_min(count($min))
         columns:
+          avg($min):
+            unit: '{connections}'
+            color: '#fac858'
           sum($max):
+            unit: '{connections}'
+            color: '#91cc75'
+          sum($usage):
             unit: '{connections}'
             color: '#5470c6'
         styles:
+          avg(min):
+            color: '#fac858'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
           avg(time):
+            color: '#fac858'
+            opacity: 10
+            line_width: 2
+            symbol: none
+            symbol_size: 4
+          avg(utilization):
             color: '#5470c6'
             opacity: 10
             line_width: 2
             symbol: none
             symbol_size: 4
           per_min(count(time)):
-            color: '#91cc75'
+            color: '#ee6666'
             opacity: 10
             line_width: 2
             symbol: none
             symbol_size: 4
           sum(max):
-            color: '#5470c6'
+            color: '#91cc75'
             opacity: 10
             line_width: 2
             symbol: none
             symbol_size: 4
-          sum(requests):
-            color: '#91cc75'
+          sum(usage):
+            color: '#5470c6'
             opacity: 10
             line_width: 2
             symbol: none
@@ -165,6 +213,7 @@ grid_rows:
       - title: db-connection-pending-requests
         width: 12
         height: 28
+        x_axis: 12
         y_axis: 56
         type: chart
         chart: line
@@ -197,8 +246,7 @@ grid_rows:
       - title: DB Connection create time
         width: 12
         height: 28
-        x_axis: 12
-        y_axis: 56
+        y_axis: 84
         type: chart
         chart: area
         metrics:
