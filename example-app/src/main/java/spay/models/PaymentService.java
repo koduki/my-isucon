@@ -23,26 +23,28 @@ public class PaymentService {
     CardDao cardDao;
 
     public PaymentTransaction purchase(PaymentTransaction request) throws LimitExceededException, InvalidCardException {
-        for (Card card : cardDao.list(request.getCardNumber())) {
-            verifyValid(card);
-            verifyLimit(request.getAmount(), card);
+        for (Card card : cardDao.list()) {
+            if (card.getCardNumber().equals(request.getCardNumber())) {
+                verifyValid(card);
+                verifyLimit(request.getAmount(), card);
 
-            card.setUsedAmount(card.getUsedAmount() + request.getAmount());
-            PaymentTransaction transaction = new PaymentTransaction();
-            transaction.setCardNumber(card.getCardNumber());
-            transaction.setItemName(request.getItemName());
-            transaction.setAmount(request.getAmount());
-            transactionDao.persist(transaction);
+                card.setUsedAmount(card.getUsedAmount() + request.getAmount());
+                PaymentTransaction transaction = new PaymentTransaction();
+                transaction.setCardNumber(card.getCardNumber());
+                transaction.setItemName(request.getItemName());
+                transaction.setAmount(request.getAmount());
+                transactionDao.add(transaction);
 
-            return transaction;
-
+                return transaction;
+            }
         }
         return null;
     }
 
     public List<PaymentTransaction> history(String cardNumber) {
-        return transactionDao.stream(cardNumber)
-                .collect(Collectors.toList());
+        return transactionDao.stream()
+        .filter(t -> t.getCardNumber().equals(cardNumber))
+        .collect(Collectors.toList());
     }
 
     private void verifyLimit(int requestAmount, Card card) throws LimitExceededException {

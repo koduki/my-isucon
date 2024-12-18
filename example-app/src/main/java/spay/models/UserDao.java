@@ -25,11 +25,10 @@ public class UserDao {
         return user;
     }
 
-    public User get(long customerNumber) {
+    public Stream<User> stream() {
         return em
-                .createQuery("SELECT u FROM User u WHERE u.customerNumber = :customerNumber", User.class)
-                .setParameter("customerNumber", customerNumber)
-                .getSingleResult();
+                .createQuery("SELECT u FROM User u", User.class)
+                .getResultList().stream();
     }
 
 }

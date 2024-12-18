@@ -36,8 +36,16 @@ public class AccountService {
     }
 
     public User getUser(long customerNumber) {
-        User user = userDao.get(customerNumber);
-        return user;
+        List<User> users = userDao.stream()
+                .filter(u -> u.getCustomerNumber().equals(customerNumber))
+                .collect(Collectors.toList());
+
+        for (User u : users) {
+            if (u.getCustomerNumber().equals(customerNumber)) {
+                return u;
+            }
+        }
+        return null;
     }
 
     public Card issueCard(long customerNumber) {
@@ -57,7 +65,7 @@ public class AccountService {
         byte[] cardFace = readImage(imagePath);
         card.setCardFace(cardFace);
 
-        cardDao.persist(card);
+        cardDao.add(card);
 
         user.getCards().add(card);
         userDao.persist(user);
@@ -66,9 +74,12 @@ public class AccountService {
     }
 
     public void disableCard(String cardNumber) {
-        Card card = cardDao.get(cardNumber);
-        card.setEnable(false);
-        cardDao.persist(card);
+        cardDao.stream().filter(c -> c.getCardNumber().equals(cardNumber))
+                .map(c -> {
+                    c.setEnable(false);
+                    return c;
+                })
+                .forEach(c -> cardDao.add(c));
     }
 
     private String generateCardNumber() {
@@ -85,7 +96,7 @@ public class AccountService {
     }
 
     private long generateCustomerNumber() {
-        Random random = new Random(System.nanoTime());
+        Random random = new Random(System.currentTimeMillis());
         return 1000000000L + random.nextInt(900000000);
     }
 
